@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Accesing Databases over WebSockets</title>
+<script src="WebSocket.js"></script>
+<script>
+function setup(){
+	url = "ws://localhost:6001/jdbc";
+	console.log("CONNECT: " + url);
+	try {
+		websocket = new WebSocket(url);
+		websocket.onopen = function(evt) {
+			console.log("CONNECTED");
+
+			btnSearch = document.getElementById("searchCustomer");
+			message = document.getElementById("emailMember");
+			firstName = document.getElementById("firstName");
+			lastName = document.getElementById("lastName");
+			address  = document.getElementById("address");
+			phone    = document.getElementById("phone");
+			city     = document.getElementById("city");
+			state    = document.getElementById("state");
+			zipCode  = document.getElementById("zipCode");
+			
+			btnSearch.onclick = function() {
+				console.log("SENT: " + message.value);
+			    websocket.send(message.value + '\n');
+			};
+			
+			websocket.onmessage = function(evt) {
+				console.log("RESPONSE: " + evt.data);
+				if(evt.data.length > 10){
+					parse(evt.data);
+				}else{
+					alert("Customer Not Found");
+					firstName.value = "";
+					lastName.value  = "";
+					address.value   = "";
+					phone.value     = "";
+					city.value      = "";
+					state.value     = "";
+					zipCode.value   = "";
+					message.value   = "";
+				}
+		    }
+		websocket.onclose = function(){
+			console.log("CONNECTION CLOSED");
+			pause(5000);
+			setup();
+		}
+		function pause(millis){
+		  var date = new Date();
+		  var curDate = null;
+		  do { curDate = new Date(); }
+		  while(curDate-date < millis);
+		}
+	}
+	}catch(e){
+		console.log(e);
+	}
+	
+	function parse(response){
+		var customerRecord = response.split(",");
+		firstName.value = customerRecord[3].slice(18);
+		lastName.value  = customerRecord[2].slice(17);
+		address.value   = customerRecord[5].slice(14);
+		phone.value     = customerRecord[4].slice(7);
+		city.value      = customerRecord[7].slice(6);
+		state.value     = customerRecord[8].slice(7);
+		zipCode.value   = customerRecord[9].slice(12);
+	}
+}
+</script>	
+<body onload="setup()">
+	<h2>Search Customer</h2>
+	<p>To search for a customer account info, please type an email address below.</p>
+	<label for="emailMember">Email</label>
+	<input class="required" id="emailMember" name="logonId" type="text" value=""> 
+	<button id="searchCustomer">Search</button>
+    <h2 class="fancy-title">Customer Information</h2>
+    <label for="firstName">First Name</label>
+	<input class="required" id="firstName" name="firstName" type="text" value="" maxlength="14"><p>
+	<label for="lastName">Last Name</label>
+	<input class="required" id="lastName" name="lastName" type="text" value="" maxlength="20"><p>
+	<label for="address">Address</label>
+	<input class="required" id="address" name="address" type="text" value=""><p>
+	<label for="phone">Phone</label>
+	<input class="required" id="phone" name="phone" type="text" value=""><p>
+	<label for="city">City</label>
+	<input class="required" id="city" name="city" type="text" value=""><p>
+	<label for="city">State</label>
+	<input class="required" id="state" name="state" type="text" value=""><p>
+	<label for="zipCode">Zip Code</label>
+	<input class="required" id="zipCode" name="zipCode" type="text" value=""><p>
+</body>
+</html>
