@@ -42,6 +42,8 @@ in this demo.
 Copy the web/ folder under $PROJECT_HOME/Gateway folder to your Kaazing WebSocket Gateway HTML5 Edition directory 
 under web/extras.
 
+Copy the Kaazing WebSocket Gateway HTML5 Edition JavaScript client library (WebSocket.js) from kaazing-websocket-gateway-html5-3.x.x/lib/client/javascript to kaazing-websocket-gateway-html5-3.x.x/web/extras/web.
+
 Start the Gateway by pointing to the configuration file under $PROJECT_HOME/Gateway called gateway-config-jdbc.xml
 
 Then, point your browser to http://localhost:6001/web/index.html
