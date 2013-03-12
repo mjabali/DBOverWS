@@ -54,4 +54,4 @@ The customer information should be retrieved from the database and populate the 
 Typing an invalid or an email address not present in the database should return an alert popup with 
 the 'Customer Not Found' message.
 
-If you have any questions, feel free to contact me at marcelo.jabali@kaazing.com
+If you have any questions, feel free to contact me at mqjabali [at] gmail [dot] com
